@@ -342,7 +342,6 @@ if radio_select == 'Forex' :
 
             # fig = px.line(data, x="index", y=y_arr, template="ggplot2", labels={"index" : "Date"})
             if graph_type == 'Line' :
-                st.table(data)
                 fig = make_subplots(specs=[[{"secondary_y" : True}]])
 
                 fig.add_trace(go.Scatter(x=data['index'], y=data['Rate'], name='Rate'),

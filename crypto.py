@@ -29,7 +29,7 @@ class MyError(Exception) :
 
 st.set_page_config(layout='wide')
 st.sidebar.title('Financial Analysis Dashboard')
-radio_select = st.sidebar.radio('Select from below options', ['Crypto', 'Indian Stocks', 'US Stocks', 'Forex',
+radio_select = st.sidebar.radio('Select from below options', [ 'Indian Stocks','Crypto', 'US Stocks', 'Forex',
                                                               "Global stocks and more(Alpha Vantage)",
                                                               "Global stocks and more(Yahoo Finance)"])
 

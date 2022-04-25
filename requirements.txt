@@ -4,3 +4,4 @@ plotly==5.1.0
 numpy==1.21.1
 requests==2.27.1
 yfinance==0.1.70
+click==8

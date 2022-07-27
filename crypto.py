@@ -10,6 +10,8 @@ import json
 import random
 import webbrowser
 import yfinance as yf
+from prophet import Prophet
+from prophet.plot import plot_plotly
 from sys_var import api_list,indicator_symbol_list,graph_type_list
 
 
@@ -28,10 +30,10 @@ class MyError(Exception) :
 
 
 st.set_page_config(layout='wide')
-st.sidebar.title('Financial Analysis Dashboard')
+st.sidebar.title('FINANCIAL PREDICTION AND ANALYSIS APPLICATION')
 radio_select = st.sidebar.radio('Select from below options', [ 'Indian Stocks','Crypto', 'US Stocks', 'Forex',
                                                               "Global stocks and more(Alpha Vantage)",
-                                                              "Global stocks and more(Yahoo Finance)"])
+                                                              "Global stocks and more(Yahoo Finance)",'Prediction'])
 
 if radio_select == 'Crypto' :
     st.title("CRYPTOCURRENCIES")
@@ -1383,6 +1385,54 @@ if radio_select == "Global stocks and more(Yahoo Finance)" :
             st.write(e)
     else:
         st.info('For Indian stocks only National Stock Exchange(NSE/NS) is supported for Bombay Stock Exchange(BSE/BS) select "Indian Stocks" option from sidebar ')
+
+if radio_select == 'Prediction':
+    st.title('Stock Forecast App')
+    START = "2015-01-01"
+    TODAY = datetime.date.today().strftime("%Y-%m-%d")
+
+    st.title(radio_select)
+
+    selected_stock = st.text_input("Search by Symbol/Ticker","AAPL")
+
+
+    n_years = st.slider('Years of prediction:', 1, 4)
+    period = n_years * 365
+
+
+    @st.cache
+    def load_data(ticker) :
+        data = yf.download(ticker, START, TODAY)
+        data.reset_index(inplace=True)
+        return data
+
+
+    data_load_state = st.text('Loading data...')
+    data = load_data(selected_stock)
+    data_load_state.text('Loading data... done!')
+
+    namer=yf.Ticker(selected_stock).info['longName']
+
+
+
+
+    # Predict forecast with Prophet.
+    df_train = data[['Date', 'Close']]
+    df_train = df_train.rename(columns={"Date" : "ds", "Close" : "y"})
+
+    m = Prophet()
+    m.fit(df_train)
+    future = m.make_future_dataframe(periods=period)
+    forecast = m.predict(future)
+
+    # Show and plot forecast
+
+
+    st.write(f'Forecast plot for {n_years} years')
+    st.title("Price prediction "+namer+"(" + selected_stock + ")")
+    fig1 = plot_plotly(m, forecast)
+    st.plotly_chart(fig1)
+
 
 
 st.write('')

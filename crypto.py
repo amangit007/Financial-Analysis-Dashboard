@@ -13,6 +13,7 @@ import yfinance as yf
 from prophet import Prophet
 from prophet.plot import plot_plotly
 from sys_var import api_list,indicator_symbol_list,graph_type_list
+from bokeh.models.widgets import Div
 
 
 
@@ -1030,9 +1031,15 @@ if radio_select == "Global stocks and more(Yahoo Finance)" :
 
     keyword = st.text_input("Search by Symbol/Ticker")
 
-    sym_but = st.button('Click here to search for supported symbols')
-    if sym_but :
-        webbrowser.open('https://finance.yahoo.com/screener/new')
+
+
+
+
+    if st.button('Click here to search for supported symbols') :
+        js = "window.open('https://finance.yahoo.com/')"  # New tab or window
+        html = '<img src onerror="{}">'.format(js)
+        div = Div(text=html)
+        st.bokeh_chart(div)
 
     if keyword != '' :
         ticker = yf.Ticker(keyword)
@@ -1387,13 +1394,18 @@ if radio_select == "Global stocks and more(Yahoo Finance)" :
         st.info('For Indian stocks only National Stock Exchange(NSE/NS) is supported for Bombay Stock Exchange(BSE/BS) select "Indian Stocks" option from sidebar ')
 
 if radio_select == 'Prediction':
-    st.title('Stock Forecast App')
+   
     START = "2015-01-01"
     TODAY = datetime.date.today().strftime("%Y-%m-%d")
 
     st.title(radio_select)
 
     selected_stock = st.text_input("Search by Symbol/Ticker","AAPL")
+    if st.button('Click here to search for supported symbols') :
+        js = "window.open('https://finance.yahoo.com/')"  # New tab or window
+        html = '<img src onerror="{}">'.format(js)
+        div = Div(text=html)
+        st.bokeh_chart(div)
 
 
     n_years = st.slider('Years of prediction:', 1, 4)

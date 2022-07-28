@@ -7,3 +7,4 @@ yfinance==0.1.70
 click==8
 protobuf~=3.19.0
 prophet==1.1
+bokeh==2.4.1
